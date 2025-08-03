@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  # AI Orchestrator Backend
+  ai-orchestrator:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./ai_orchestrator.db
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEBUG=True
+    volumes:
+      - ./backend:/app
+      - ai_orchestrator_data:/app/data
+    depends_on:
+      - redis
+    networks:
+      - ai-network
+
+  # Redis for task queue
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ai-network
+
+  # Frontend Web Dashboard
+  web-dashboard:
+    build:
+      context: ./frontend/web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+    depends_on:
+      - ai-orchestrator
+    networks:
+      - ai-network
+
+  # Browser Automation Service
+  browser-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.browser
+    ports:
+      - "8001:8001"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./backend:/app
+      - browser_screenshots:/app/screenshots
+    depends_on:
+      - ai-orchestrator
+    networks:
+      - ai-network
+
+  # Document Management Service
+  document-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.document
+    ports:
+      - "8002:8002"
+    environment:
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_PROJECT_ID=${GOOGLE_PROJECT_ID}
+    volumes:
+      - ./backend:/app
+      - document_data:/app/documents
+    depends_on:
+      - ai-orchestrator
+    networks:
+      - ai-network
+
+  # Communication Service
+  communication-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.communication
+    ports:
+      - "8003:8003"
+    environment:
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+    volumes:
+      - ./backend:/app
+      - communication_data:/app/communications
+    depends_on:
+      - ai-orchestrator
+    networks:
+      - ai-network
+
+  # Media Processing Service
+  media-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.media
+    ports:
+      - "8004:8004"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./backend:/app
+      - media_data:/app/media
+    depends_on:
+      - ai-orchestrator
+    networks:
+      - ai-network
+
+  # AI Bot Builder Service
+  bot-builder-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.bot-builder
+    ports:
+      - "8005:8005"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./backend:/app
+      - bot_data:/app/bots
+    depends_on:
+      - ai-orchestrator
+    networks:
+      - ai-network
+
+volumes:
+  ai_orchestrator_data:
+  redis_data:
+  browser_screenshots:
+  document_data:
+  communication_data:
+  media_data:
+  bot_data:
+
+networks:
+  ai-network:
+    driver: bridge

@@ -1,17 +1,13 @@
-import openai
 import json
 import logging
 from typing import Dict, Any, Optional
 from pydantic import BaseModel
 from ..models.task import TaskType, TaskPriority
+from .llm_service import LLMService
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
-# Configure OpenAI
-openai.api_key = os.getenv("OPENAI_API_KEY")
-openai_model = os.getenv("OPENAI_MODEL", "gpt-4")
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +23,7 @@ class ParsedCommand(BaseModel):
 
 class CommandParser:
     def __init__(self):
+        self.llm = LLMService()
         self.system_prompt = """
 You are an AI command parser for an AI Orchestrator system. Your job is to parse natural language commands and convert them into structured task specifications.
 
@@ -72,19 +69,11 @@ Return a JSON object with the following structure:
             if context:
                 user_prompt += f"\nContext: {json.dumps(context)}"
             
-            # Call OpenAI API
-            response = await openai.ChatCompletion.acreate(
-                model=openai_model,
-                messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=0.1,
-                max_tokens=1000
-            )
-            
-            # Parse the response
-            content = response.choices[0].message.content
+            # Call LLM API
+            content = await self.llm.chat([
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": user_prompt}
+            ])
             parsed_data = json.loads(content)
             
             # Create ParsedCommand object

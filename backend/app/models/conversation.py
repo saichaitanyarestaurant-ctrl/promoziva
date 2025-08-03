@@ -48,7 +48,7 @@ class ConversationMessage(Base):
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
     
     # Additional data
-    metadata = Column(JSON)  # Additional message metadata
+    message_metadata = Column(JSON)  # Additional message metadata
     
     # Relationships
     conversation = relationship("Conversation", back_populates="messages")

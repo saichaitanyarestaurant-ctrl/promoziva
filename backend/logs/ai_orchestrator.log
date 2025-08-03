@@ -1,0 +1,10 @@
+2025-08-03 16:14:34,257 - main - INFO - Starting AI Orchestrator application...
+2025-08-03 16:14:34,304 - main - INFO - Database tables created successfully
+2025-08-03 16:14:34,319 - main - INFO - Default service configurations created
+2025-08-03 16:14:34,319 - main - INFO - AI Orchestrator application started successfully
+2025-08-03 16:14:34,319 - app.core.orchestrator - INFO - Starting AI Orchestrator
+2025-08-03 16:14:34,319 - app.core.orchestrator - INFO - AI Orchestrator started successfully
+2025-08-03 16:14:34,319 - app.core.queue_manager - INFO - Starting task processing queue
+2025-08-03 16:14:43,942 - app.core.orchestrator - INFO - Stopping AI Orchestrator
+2025-08-03 16:14:43,942 - app.core.orchestrator - INFO - AI Orchestrator stopped
+2025-08-03 16:14:43,942 - main - INFO - Shutting down AI Orchestrator application...

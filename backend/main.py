@@ -2,9 +2,11 @@ import os
 import logging
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
+import uvicorn
 
 from app.api.routes import router
 from app.models.database import engine, Base
@@ -116,7 +118,7 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ORIGINS", ["http://localhost:3000", "http://localhost:3001"]),
+    allow_origins=["*"],  # Allow all origins for development
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -134,16 +136,28 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Include API routes
 app.include_router(router, prefix="/api/v1", tags=["AI Orchestrator"])
 
-# Root endpoint
+# Serve static files from frontend directory
+try:
+    app.mount("/static", StaticFiles(directory="../frontend/static"), name="static")
+except:
+    # If frontend/static doesn't exist, create a simple fallback
+    pass
+
+# Root endpoint - serve the main HTML file
 @app.get("/")
 async def root():
-    return {
-        "message": "AI Orchestrator API",
-        "version": "1.0.0",
-        "status": "running",
-        "docs": "/docs",
-        "redoc": "/redoc"
-    }
+    try:
+        return FileResponse("../frontend/static/index.html")
+    except:
+        # Fallback if frontend files don't exist
+        return {
+            "message": "AI Orchestrator API",
+            "version": "1.0.0",
+            "status": "running",
+            "docs": "/docs",
+            "redoc": "/redoc",
+            "note": "Frontend files not found. Please build the frontend first."
+        }
 
 # Health check endpoint
 @app.get("/health")
@@ -155,8 +169,6 @@ async def health_check():
     }
 
 if __name__ == "__main__":
-    import uvicorn
-    
     # Get configuration from environment
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", "8000"))

@@ -16,8 +16,7 @@ class LLMService:
         self.base_url = "https://openrouter.ai/api/v1"
         self.default_model = os.getenv("OPENROUTER_MODEL", "anthropic/claude-3.5-sonnet")
         
-        if not self.api_key:
-            raise ValueError("OPENROUTER_API_KEY environment variable is required")
+        # Don't raise error at initialization, check during usage
     
     async def chat_completion(
         self,
@@ -40,6 +39,9 @@ class LLMService:
         Returns:
             Dictionary containing the API response
         """
+        if not self.api_key:
+            raise ValueError("OPENROUTER_API_KEY environment variable is required")
+            
         if not model:
             model = self.default_model
             

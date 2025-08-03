@@ -1,0 +1,23 @@
+# Core Framework
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+
+# Database
+sqlalchemy
+alembic
+
+# HTTP and Async
+httpx
+aiohttp
+
+# Utilities
+python-dotenv
+python-multipart
+python-dateutil
+pytz
+
+# Development
+pytest
+pytest-asyncio

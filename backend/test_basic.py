@@ -145,7 +145,8 @@ async def main():
 if __name__ == "__main__":
     # Set up environment for testing
     os.environ.setdefault("DATABASE_URL", "sqlite:///./test_ai_orchestrator.db")
-    os.environ.setdefault("OPENAI_API_KEY", "test-key")
+    os.environ.setdefault("OPENROUTER_API_KEY", "test-key")
+    os.environ.setdefault("OPENROUTER_MODEL", "anthropic/claude-3.5-sonnet")
     
     exit_code = asyncio.run(main())
     sys.exit(exit_code)

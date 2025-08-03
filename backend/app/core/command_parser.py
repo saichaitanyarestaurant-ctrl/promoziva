@@ -1,17 +1,13 @@
-import openai
 import json
 import logging
 from typing import Dict, Any, Optional
 from pydantic import BaseModel
 from ..models.task import TaskType, TaskPriority
+from ..services.llm_service import llm_service
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
-# Configure OpenAI
-openai.api_key = os.getenv("OPENAI_API_KEY")
-openai_model = os.getenv("OPENAI_MODEL", "gpt-4")
 
 logger = logging.getLogger(__name__)
 
@@ -72,9 +68,8 @@ Return a JSON object with the following structure:
             if context:
                 user_prompt += f"\nContext: {json.dumps(context)}"
             
-            # Call OpenAI API
-            response = await openai.ChatCompletion.acreate(
-                model=openai_model,
+            # Call OpenRouter API via LLM service
+            response = await llm_service.chat_completion(
                 messages=[
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": user_prompt}
@@ -84,7 +79,7 @@ Return a JSON object with the following structure:
             )
             
             # Parse the response
-            content = response.choices[0].message.content
+            content = response["choices"][0]["message"]["content"]
             parsed_data = json.loads(content)
             
             # Create ParsedCommand object

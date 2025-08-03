@@ -21,11 +21,11 @@ A comprehensive AI-powered orchestration platform that manages multiple services
 ### Backend
 - **Python 3.11+** with FastAPI
 - **SQLAlchemy** for database management
-- **OpenAI GPT-4** for natural language processing
+- **OpenRouter** for natural language processing (supports multiple models)
 - **Playwright** for browser automation
 - **Google APIs** for document management
 - **Twilio** for communication
-- **OpenAI Whisper** for media processing
+- **OpenRouter Whisper** for media processing
 
 ### Frontend
 - **React/Next.js** for web interface
@@ -100,7 +100,7 @@ ai-orchestrator/
 ## 🔧 Configuration
 
 ### Required API Keys
-- OpenAI API Key
+- OpenRouter API Key
 - Google Cloud API Key
 - Twilio Account SID & Auth Token
 - ElevenLabs API Key (optional)

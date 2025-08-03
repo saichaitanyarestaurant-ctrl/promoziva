@@ -10,7 +10,8 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=sqlite:///./ai_orchestrator.db
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-anthropic/claude-3.5-sonnet}
       - DEBUG=True
     volumes:
       - ./backend:/app
@@ -52,7 +53,8 @@ services:
     ports:
       - "8001:8001"
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-anthropic/claude-3.5-sonnet}
     volumes:
       - ./backend:/app
       - browser_screenshots:/app/screenshots
@@ -108,7 +110,8 @@ services:
     ports:
       - "8004:8004"
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-anthropic/claude-3.5-sonnet}
     volumes:
       - ./backend:/app
       - media_data:/app/media
@@ -125,7 +128,8 @@ services:
     ports:
       - "8005:8005"
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-anthropic/claude-3.5-sonnet}
     volumes:
       - ./backend:/app
       - bot_data:/app/bots

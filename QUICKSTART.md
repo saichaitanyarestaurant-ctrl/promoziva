@@ -6,7 +6,7 @@
 - Python 3.11+
 - Node.js 18+
 - Docker & Docker Compose
-- OpenAI API Key
+- OpenRouter API Key
 
 ### 1. Clone and Setup
 ```bash
@@ -16,9 +16,10 @@ cd ai-orchestrator
 ```
 
 ### 2. Configure API Keys
-Edit the `.env` file and add your OpenAI API key:
+Edit the `.env` file and add your OpenRouter API key:
 ```bash
-OPENAI_API_KEY=your-openai-api-key-here
+OPENROUTER_API_KEY=your-openrouter-api-key-here
+OPENROUTER_MODEL=anthropic/claude-3.5-sonnet
 ```
 
 ### 3. Run with Docker (Recommended)
@@ -92,9 +93,9 @@ npm run dev
    # Kill the process or change ports in docker-compose.yml
    ```
 
-2. **OpenAI API errors**
+2. **OpenRouter API errors**
    - Verify your API key is correct
-   - Check your OpenAI account has sufficient credits
+   - Check your OpenRouter account has sufficient credits
 
 3. **Docker issues**
    ```bash
